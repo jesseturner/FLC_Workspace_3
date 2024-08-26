@@ -1,2 +1,3 @@
 model_data/gfs*
 sst_data/sst_2*
+viirs_data/*
