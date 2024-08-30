@@ -37,11 +37,11 @@ latlon=0
 ############Define directories and other details##################################################
 # If you want to adjust colormaps or data ranges, scroll to the bottom of the script and
 # adjust cmap and vmin/vmax values for appropriate "if statement".
-cmap_dir = "" # directory with your colormaps
-data_dir = "DNB_data/" # directory where the data files reside for this case
-image_dir = "" # directory where you want the images to go
+cmap_dir = "/Users/jesseturner/Desktop/hitran_api/bill_line_DNB/" # directory with your colormaps
+data_dir = "/Users/jesseturner/Desktop/hitran_api/bill_line_DNB/DNB_data/" # directory where the data files reside for this case
+image_dir = "/Users/jesseturner/Desktop/hitran_api/bill_line_DNB/" # directory where you want the images to go
 # GEO and Data grouped (like from CLASS) or separate (like from local ot CLASS)
-file_format = "separate" # "grouped" or "separate"
+file_format = "grouped" # "grouped" or "separate"
 # If using grouped files from CLASS with multiple bands, and you want to plot just a single band from the CLASS file, 
 # specify that band here (M01, M15, I1, etc). Otherwise, set to X
 set_band = "X"
@@ -60,7 +60,7 @@ set_grid= 2000
 # Keep around 100-500. Raise if creating large image that you want to be able to zoom in on details.
 set_dpi = 200
 # Geographic area of image: wlon, elon, slat, nlat: lon is neg for WH, pos for EH
-extent = (-107.9, -104.7, 43.3, 45.1) # WY Fires
+extent = (-73, -57, 33, 46) #--- Georges Bank
 #extent = (-99.2, -89.5, 34.2, 39.4) # wlon, elon, slat, nlat: lon is neg for WH, pos for EH
 #extent = (-180, 180, 60, 90) # When plotting directly over the poles with North/SouthPolarStereo (-90 in SHEM; slat can vary)
 #extent = (-123, -69, 24.3, 52.5) # conus

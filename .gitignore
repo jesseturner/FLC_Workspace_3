@@ -1,3 +1,5 @@
 model_data/gfs*
 sst_data/sst_2*
 viirs_data/*
+bill_line_DNB/DNB_data/*
+*.jpg
