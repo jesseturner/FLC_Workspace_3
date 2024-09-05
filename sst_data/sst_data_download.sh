@@ -1,4 +1,4 @@
-for date in 20240629
+for date in 20240711 20240712 20240713
 
 do 
 	#--- SST is only tracked once per day, so no time variable
