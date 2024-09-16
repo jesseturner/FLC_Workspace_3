@@ -4,3 +4,4 @@ viirs_data/*
 bill_line_VIIRS_visualization/DNB_data/*
 *.jpg
 *.h5
+*.nc
