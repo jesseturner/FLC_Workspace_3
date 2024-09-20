@@ -23,6 +23,8 @@ from pyresample import kd_tree
 import psutil
 import gc
 
+#--- RUN USING THE CONDA VIIRS ENVIRONMENT
+
 start_time = time.time()
 start_s_time = time.time() 
 fig = None
@@ -37,9 +39,9 @@ latlon=0
 ############Define directories and other details##################################################
 # If you want to adjust colormaps or data ranges, scroll to the bottom of the script and
 # adjust cmap and vmin/vmax values for appropriate "if statement".
-cmap_dir = "/Users/jesseturner/Desktop/hitran_api/bill_line_DNB/" # directory with your colormaps
-data_dir = "/Users/jesseturner/Desktop/hitran_api/bill_line_DNB/DNB_data/" # directory where the data files reside for this case
-image_dir = "/Users/jesseturner/Desktop/hitran_api/bill_line_DNB/" # directory where you want the images to go
+cmap_dir = "bill_line_VIIRS_visualization/" # directory with your colormaps
+data_dir = "bill_line_VIIRS_visualization/DNB_data/" # directory where the data files reside for this case
+image_dir = "bill_line_VIIRS_visualization/" # directory where you want the images to go
 # GEO and Data grouped (like from CLASS) or separate (like from local ot CLASS)
 file_format = "grouped" # "grouped" or "separate"
 # If using grouped files from CLASS with multiple bands, and you want to plot just a single band from the CLASS file, 
@@ -368,7 +370,9 @@ for data_file in files_datas:
           pass
         cbarl = "Albedo"
       if band in ["NCC"]:
-        img = plot_rads.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0.03, vmax=3.0, add_colorbar=False)
+        #img = plot_rads.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0.03, vmax=3.0, add_colorbar=False)
+        #--- My version
+        img = plot_rads.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0.03, vmax=1.5, add_colorbar=True)
         #img = plot_rads.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0, vmax=2, add_colorbar=False)
         if latlon==1:
           img2 = plot_rads2.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0.05, vmax=2.0, add_colorbar=False)

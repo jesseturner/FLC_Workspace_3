@@ -1,10 +1,10 @@
 #! /usr/bin/bash
 
-for date in 20240620
+for date in 20200728
 
 do 
 	#--- must be 00z, 06z, 12z, 18z
-	dtime=00z
+	dtime=12z
 
 	#--- data can be browsed at: https://noaa-gfs-bdp-pds.s3.amazonaws.com/index.html
 	wget -O model_data/gfs_$date https://noaa-gfs-bdp-pds.s3.amazonaws.com/gfs."$date"/${dtime:0:2}/atmos/gfs.t"$dtime".pgrb2.0p25.f000
