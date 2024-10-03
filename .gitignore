@@ -5,3 +5,5 @@ bill_line_VIIRS_visualization/DNB_data/*
 *.jpg
 *.h5
 *.nc
+*.png
+georgesbank_animation/*
