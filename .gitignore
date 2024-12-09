@@ -6,4 +6,5 @@ bill_line_VIIRS_visualization/DNB_data/*
 *.h5
 *.nc
 *.png
+nohup.out
 georgesbank_animation/*
