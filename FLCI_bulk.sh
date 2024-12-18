@@ -1,7 +1,8 @@
 #! /usr/bin/bash
 
 #--- Make sure you're using flc_env on smiller2
-for date in 20240805 #20240801 20240802 20240803 20240804 20240805 20240806 20240807 20240808 20240809 20240810 20240811 20240812 20240813 20240814 20240815 20240816 20240817 20240818 20240819 20240820 20240821 20240822 20240823 20240824 20240825 20240826 20240827 20240828 20240829 20240830 20240831
+#for date in 20240801 20240802 20240803 20240804  
+for date in 20240805 20240806 20240807 20240808 20240809 20240810 20240811 20240812 20240813 20240814 20240815 20240816 20240817 20240818 20240819 20240820 20240821 20240822 20240823 20240824 20240825 20240826 20240827 20240828 20240829 20240830 20240831
 
 #--- loop through the dates
 do 
@@ -14,9 +15,8 @@ do
 
     #--- Collect SST data:
     #------ SST is only tracked once per day, so no time variable
-    sst=https://www.ncei.noaa.gov/thredds/fileServer/OisstBase/NetCDF/V2.1/AVHRR/${date:0:6}/oisst-avhrr-v02r01."$date".nc
-    sst_backup=https://www.ncei.noaa.gov/thredds/fileServer/OisstBase/NetCDF/V2.1/AVHRR/${date:0:6}/oisst-avhrr-v02r01."$date"_preliminary.nc
-    wget --no-check-certificate -O sst_data/sst_$date $sst || wget -O sst_data/sst_$date $sst_backup
+    sst_path=https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/${date:0:6}/oisst-avhrr-v02r01."$date".nc
+    wget --no-check-certificate -O sst_data/sst_$date $sst_path
     echo "SST collected for "$date
 
     #--- Run the FLC simulation for date
