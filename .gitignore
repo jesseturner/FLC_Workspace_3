@@ -8,3 +8,4 @@ bill_line_VIIRS_visualization/DNB_data/*
 *.png
 nohup.out
 georgesbank_animation/*
+*.txt
