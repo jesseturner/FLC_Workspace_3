@@ -40,10 +40,10 @@ latlon=0
 # If you want to adjust colormaps or data ranges, scroll to the bottom of the script and
 # adjust cmap and vmin/vmax values for appropriate "if statement".
 cmap_dir = "bill_line_VIIRS_visualization/" # directory with your colormaps
-data_dir = "bill_line_VIIRS_visualization/DNB_data/" # directory where the data files reside for this case
+data_dir = "bill_line_VIIRS_visualization/DNB_data_2024_07_03/" # directory where the data files reside for this case
 image_dir = "bill_line_VIIRS_visualization/" # directory where you want the images to go
 # GEO and Data grouped (like from CLASS) or separate (like from local ot CLASS)
-file_format = "grouped" # "grouped" or "separate"
+file_format = "separate" # "grouped" or "separate"
 # If using grouped files from CLASS with multiple bands, and you want to plot just a single band from the CLASS file, 
 # specify that band here (M01, M15, I1, etc). Otherwise, set to X
 set_band = "X"
@@ -62,7 +62,8 @@ set_grid= 2000
 # Keep around 100-500. Raise if creating large image that you want to be able to zoom in on details.
 set_dpi = 200
 # Geographic area of image: wlon, elon, slat, nlat: lon is neg for WH, pos for EH
-extent = (-73, -57, 33, 46) #--- Georges Bank
+#extent = (-73, -57, 33, 46) #--- Georges Bank
+extent = (-80, -55, 30, 51) #--- Gulf Stream
 #extent = (-99.2, -89.5, 34.2, 39.4) # wlon, elon, slat, nlat: lon is neg for WH, pos for EH
 #extent = (-180, 180, 60, 90) # When plotting directly over the poles with North/SouthPolarStereo (-90 in SHEM; slat can vary)
 #extent = (-123, -69, 24.3, 52.5) # conus
@@ -372,11 +373,11 @@ for data_file in files_datas:
       if band in ["NCC"]:
         #img = plot_rads.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0.03, vmax=3.0, add_colorbar=False)
         #--- My version
-        img = plot_rads.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0.03, vmax=1.5, add_colorbar=True)
-        #img = plot_rads.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0, vmax=2, add_colorbar=False)
+        #img = plot_rads.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0, vmax=0.25, add_colorbar=False)
+        img = plot_rads.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0, vmax=2, add_colorbar=False)
         if latlon==1:
-          img2 = plot_rads2.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0.05, vmax=2.0, add_colorbar=False)
-          #img2 = plot_rads2.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0, vmax=2, add_colorbar=False)
+          #img2 = plot_rads2.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0, vmax=0.25, add_colorbar=False)
+          img2 = plot_rads2.plot.pcolormesh(ax=ax, transform=ccrs.PlateCarree(), cmap=vis_cmap, vmin=0, vmax=2, add_colorbar=False)
         else:
           pass
         cbarl = "Albedo"
