@@ -7,6 +7,7 @@ import matplotlib.colors as mcolors
 import cartopy.feature as feature
 import sys
 import time
+import os
 
 #--- Pass in date variable from FLCI_bulk.sh
 date_str = sys.argv[1]
@@ -16,13 +17,21 @@ gfs_file = 'model_data/gfs_'+date_str
 gfs_ds = xr.open_dataset(gfs_file, engine="cfgrib",backend_kwargs={'filter_by_keys': {'typeOfLevel':'isobaricInhPa'}})
 
 #--- Define the region
-#------ Global
-latitude_north = 90
-latitude_south = -90
-longitude_west = -360
-longitude_east = 0
+#--- Gulf Stream
+latitude_north = 51
+latitude_south = 30
+longitude_west = -80
+longitude_east = -55
 region = gfs_ds.sel(latitude=slice(latitude_north, latitude_south), longitude=slice(360+longitude_west, 360+longitude_east))
-region_name = "global"
+region_name = "gulf_stream"
+
+#------ Global
+# latitude_north = 90
+# latitude_south = -90
+# longitude_west = -360
+# longitude_east = 0
+# region = gfs_ds.sel(latitude=slice(latitude_north, latitude_south), longitude=slice(360+longitude_west, 360+longitude_east))
+# region_name = "global"
 
 #--- Create the datetime string
 datetime_str = np.datetime_as_string(region.time.values, unit='h')
@@ -211,7 +220,14 @@ clb.set_label('(K)', fontsize=15)
 ax.set_title("Simulated BTD ("+ str(round(first_wl*1e6, 1)) + " μm - " + str(round(second_wl*1e6, 1)) +" μm) \n("+datetime_str+")", fontsize=20, pad=10)
 ax.add_feature(feature.LAND, zorder=100, edgecolor='#000', facecolor='tan')
 fig.set_dpi(200)
-fig.savefig("composite/images/"+region_name+"_"+date_str, dpi=200, bbox_inches='tight')
+
+#--- Create save directories
+image_dir = f"composite/images/"
+netcdf_dir = f"composite/{region_name}/"
+os.makedirs(image_dir, exist_ok=True)
+os.makedirs(netcdf_dir, exist_ok=True)
+
+fig.savefig(f"{image_dir}{region_name}_{date_str}", dpi=200, bbox_inches='tight')
 
 #--- Save as a netCDF
 btd_ds = xr.Dataset(
@@ -223,5 +239,5 @@ btd_ds = xr.Dataset(
         "longitude": region.longitude
     }
 )
-btd_ds.to_netcdf("composite/"+region_name+"/"+region_name+"_"+date_str+".nc")
+btd_ds.to_netcdf(f"{netcdf_dir}{region_name}_{date_str}.nc")
 print("Successfully saved netCDF for "+date_str)
