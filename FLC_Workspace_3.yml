@@ -13,3 +13,7 @@ dependencies:
   - h5py
   - pyresample
   - psutil
+  - geos
+  - proj
+  - pyproj
+  - shapely
