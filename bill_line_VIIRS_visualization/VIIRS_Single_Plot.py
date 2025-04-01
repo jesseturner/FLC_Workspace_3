@@ -40,7 +40,7 @@ latlon=0
 # If you want to adjust colormaps or data ranges, scroll to the bottom of the script and
 # adjust cmap and vmin/vmax values for appropriate "if statement".
 cmap_dir = "bill_line_VIIRS_visualization/" # directory with your colormaps
-data_dir = "bill_line_VIIRS_visualization/DNB_data_2024_07_03/" # directory where the data files reside for this case
+data_dir = "bill_line_VIIRS_visualization/DNB_data_2025_03_12/" # directory where the data files reside for this case
 image_dir = "bill_line_VIIRS_visualization/" # directory where you want the images to go
 # GEO and Data grouped (like from CLASS) or separate (like from local ot CLASS)
 file_format = "separate" # "grouped" or "separate"
