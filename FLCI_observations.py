@@ -26,10 +26,16 @@ if date_str == "20240620":
 
 #--- Region (Used for figure)
 #--- Gulf Stream
-latitude_north = 51
-latitude_south = 30
-longitude_west = -80
-longitude_east = -55
+# latitude_north = 51
+# latitude_south = 30
+# longitude_west = -80
+# longitude_east = -55
+
+#--- Georges Bank
+latitude_north = 46
+latitude_south = 33
+longitude_west = -73
+longitude_east = -57
 
 sst_file = "sst_data/sst_"+date_str
 sst_ds = xr.open_dataset(sst_file, engine='netcdf4')
@@ -165,7 +171,7 @@ fig,ax=plt.subplots(1, figsize=(12,12),subplot_kw={'projection': projection})
 from matplotlib.colors import LinearSegmentedColormap
 colors = [(0, '#A9A9A9'), (0.5, 'white'), (1, '#1167b1')]  # +3 = blueish teal, 0 = white, -3 = grey
 cmap = LinearSegmentedColormap.from_list('custom_cmap', colors)
-c=ax.scatter(lon-360, lat, c=BTD, cmap=cmap, s=1500, edgecolor='black', linewidth=1, vmin=-3, vmax=3, zorder=5)
+c=ax.scatter(lon-360, lat, c=BTD, cmap=cmap, s=3000, edgecolor='black', linewidth=1, vmin=-3, vmax=3, zorder=5)
 clb = plt.colorbar(c, shrink=0.4, pad=0.02, ax=ax, extend='both')
 clb.set_ticks([-2.4, -1.6, -0.8, 0, 0.8, 1.6, 2.4])
 clb.ax.tick_params(labelsize=15)
