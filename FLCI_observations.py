@@ -6,10 +6,30 @@ import xarray as xr
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy.feature as feature
 
-date_str = "20250312"
+date_str = "20240620"
 target_lat = 43.820069
-target_lon = -66.164790 + 180
+target_lon = -66.164790 #113.83
+
+#--- Values from radiosonde
+#------ Entered manually for speed
+if date_str == "20250312":
+    pressure_levels = [1004, 1000, 996, 981, 973, 967.9, 967.0, 944.0, 932.7, 925, 903, 898.7, 894, 865.6, 864, 850]
+    mix_ratio = [4.82, 4.64, 4.65, 4.76, 4.83, 4.69, 4.66, 5.47, 4.65, 4.15, 2.55, 2.7, 2.87, 2.21, 2.18, 1.98]
+    temperatures = [3.4, 3.4, 3.4, 3.8, 7.8, 8.1, 8.2, 6.8, 6.3, 6.0, 5.2, 4.9, 4.6, 2.7, 2.6, 2.2]
+if date_str == "20240620":
+    pressure_levels = [1023, 1008, 10001, 1000, 999, 990, 988.4, 971.0, 954.4, 952, 925, 921.8, 890, 884, 859.1, 850]
+    mix_ratio = [10.86, 10.74, 10.82, 11.19, 11.28, 12.38, 12.62, 15.50, 14.68, 14.56, 14.43, 14.35, 13.52, 13.36, 11.09, 10.33]
+    temperatures = [17.4, 16.0, 16.4, 17.2, 18.4, 20.8, 20.9, 22.2, 23.6, 23.8, 22.4, 22.2, 20.5, 20.2, 19.2, 18.8]
+
+#--- Region (Used for figure)
+#--- Gulf Stream
+latitude_north = 51
+latitude_south = 30
+longitude_west = -80
+longitude_east = -55
 
 sst_file = "sst_data/sst_"+date_str
 sst_ds = xr.open_dataset(sst_file, engine='netcdf4')
@@ -19,19 +39,12 @@ sst_ds =  sst_ds.squeeze()
 sst_ds.sst.values = sst_ds.sst.values+273.15
 
 #--- Select nearest point
-valid_sst = sst_ds.sst.dropna(dim="lat", how="any").dropna(dim="lon", how="any")
-nearest_valid = valid_sst.sel(lat=target_lat, lon=target_lon, method="nearest")
+nearest_valid = sst_ds.sst.sel(lat=target_lat, lon=target_lon+360, method="nearest")
 lat = nearest_valid.lat.values
 lon = nearest_valid.lon.values
 sst = nearest_valid.values
-print(f"Selected latitude: {lat}, Selected longitude: {lon}")
+print(f"Selected latitude: {lat}, Selected longitude: {lon-360}")
 print(f"SST Value: {sst}")
-
-#--- Values from radiosonde
-#------ Entered manually for speed
-pressure_levels = [1004, 1000, 996, 981, 973, 967.9, 967.0, 944.0, 932.7, 925, 903, 898.7, 894, 865.6, 864, 850]
-mix_ratio = [4.82, 4.64, 4.65, 4.76, 4.83, 4.69, 4.66, 5.47, 4.65, 4.15, 2.55, 2.7, 2.87, 2.21, 2.18, 1.98]
-temperatures = [3.4, 3.4, 3.4, 3.8, 7.8, 8.1, 8.2, 6.8, 6.3, 6.0, 5.2, 4.9, 4.6, 2.7, 2.6, 2.2]
 
 #--- Put in kg/kg units
 mix_ratio_kgkg = [x / 1000 for x in mix_ratio]
@@ -141,6 +154,29 @@ second_I_tot = I_sfc(sst, second_optical_thickness, second_wl) + I_atm(second_op
 BTD = brightness_temperature(first_I_tot, first_wl) - brightness_temperature(second_I_tot, second_wl)
 
 formatted_T = ', '.join(f"{t:.2f}" for t in temperatures_K)
+formatted_w = ', '.join(f"{w:.2e}" for w in mix_ratio_kgkg)
 print(f"Temperatures: {formatted_T}")
-print(f"Pressure Levels: {pressure_levels}")
+print(f"Mixing Ratios (kg/kg): {formatted_w}")
 print(f"BTD: {BTD:.4f}")
+
+#--- Plot the result
+projection=ccrs.PlateCarree(central_longitude=0)
+fig,ax=plt.subplots(1, figsize=(12,12),subplot_kw={'projection': projection})
+from matplotlib.colors import LinearSegmentedColormap
+colors = [(0, '#A9A9A9'), (0.5, 'white'), (1, '#1167b1')]  # +3 = blueish teal, 0 = white, -3 = grey
+cmap = LinearSegmentedColormap.from_list('custom_cmap', colors)
+c=ax.scatter(lon-360, lat, c=BTD, cmap=cmap, s=1500, edgecolor='black', linewidth=1, vmin=-3, vmax=3, zorder=5)
+clb = plt.colorbar(c, shrink=0.4, pad=0.02, ax=ax, extend='both')
+clb.set_ticks([-2.4, -1.6, -0.8, 0, 0.8, 1.6, 2.4])
+clb.ax.tick_params(labelsize=15)
+clb.set_label('(K)', fontsize=15)
+ax.set_extent([longitude_west, longitude_east, latitude_south, latitude_north], crs=ccrs.PlateCarree())
+ax.set_title("Estimated BTD (Cloud-Free)", fontsize=20, pad=10)
+ax.coastlines(resolution='50m', color='black', linewidth=1)
+ax.add_feature(feature.LAND, edgecolor='#000', facecolor='#000', zorder=10)
+gl = ax.gridlines(draw_labels=True, linewidth=1, color='gray', linestyle='--', zorder=0)
+gl.top_labels = False
+gl.right_labels = False
+ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, pos: f'{x:.1f}°E' if x >= 0 else f'{-x:.1f}°W'))
+ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, pos: f'{y:.1f}°N' if y >= 0 else f'{-y:.1f}°S'))
+fig.savefig("flc_estimation_figure/"+date_str, dpi=200, bbox_inches='tight')
