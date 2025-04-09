@@ -165,19 +165,48 @@ print(f"Temperatures: {formatted_T}")
 print(f"Mixing Ratios (kg/kg): {formatted_w}")
 print(f"BTD: {BTD:.4f}")
 
-#--- Plot the result
+#--- Extending over the domain
+sst_domain = sst_ds.sst.values
+first_I_tot_domain = I_sfc(sst_domain, first_optical_thickness, first_wl) + I_atm(first_optical_thickness, pressure_levels, temperatures_K, first_wl)
+second_I_tot_domain = I_sfc(sst_domain, second_optical_thickness, second_wl) + I_atm(second_optical_thickness, pressure_levels, temperatures_K, second_wl)
+BTD_domain = brightness_temperature(first_I_tot_domain, first_wl) - brightness_temperature(second_I_tot_domain, second_wl)
+
+#--- Plot the result as a single large point
+# projection=ccrs.PlateCarree(central_longitude=0)
+# fig,ax=plt.subplots(1, figsize=(12,12),subplot_kw={'projection': projection})
+# from matplotlib.colors import LinearSegmentedColormap
+# colors = [(0, '#A9A9A9'), (0.5, 'white'), (1, '#1167b1')]  # +3 = blueish teal, 0 = white, -3 = grey
+# cmap = LinearSegmentedColormap.from_list('custom_cmap', colors)
+# c=ax.scatter(lon-360, lat, c=BTD, cmap=cmap, s=3000, edgecolor='black', linewidth=1, vmin=-3, vmax=3, zorder=5)
+# clb = plt.colorbar(c, shrink=0.4, pad=0.02, ax=ax, extend='both')
+# clb.set_ticks([-2.4, -1.6, -0.8, 0, 0.8, 1.6, 2.4])
+# clb.ax.tick_params(labelsize=15)
+# clb.set_label('(K)', fontsize=15)
+# ax.set_extent([longitude_west, longitude_east, latitude_south, latitude_north], crs=ccrs.PlateCarree())
+# ax.set_title("Estimated BTD (Cloud-Free)", fontsize=20, pad=10)
+# ax.coastlines(resolution='50m', color='black', linewidth=1)
+# ax.add_feature(feature.LAND, edgecolor='#000', facecolor='#000', zorder=10)
+# gl = ax.gridlines(draw_labels=True, linewidth=1, color='gray', linestyle='--', zorder=0)
+# gl.top_labels = False
+# gl.right_labels = False
+# ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, pos: f'{x:.1f}°E' if x >= 0 else f'{-x:.1f}°W'))
+# ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, pos: f'{y:.1f}°N' if y >= 0 else f'{-y:.1f}°S'))
+# fig.savefig("flci_observations_figure/"+date_str, dpi=200, bbox_inches='tight')
+
+#--- Plot the result extended over the whole map
 projection=ccrs.PlateCarree(central_longitude=0)
 fig,ax=plt.subplots(1, figsize=(12,12),subplot_kw={'projection': projection})
 from matplotlib.colors import LinearSegmentedColormap
 colors = [(0, '#A9A9A9'), (0.5, 'white'), (1, '#1167b1')]  # +3 = blueish teal, 0 = white, -3 = grey
 cmap = LinearSegmentedColormap.from_list('custom_cmap', colors)
-c=ax.scatter(lon-360, lat, c=BTD, cmap=cmap, s=3000, edgecolor='black', linewidth=1, vmin=-3, vmax=3, zorder=5)
+levels = np.linspace(-3, 3, 31)
+c=ax.contourf(sst_ds.lon, sst_ds.lat, BTD_domain, cmap=cmap, extend='both', levels=levels)
 clb = plt.colorbar(c, shrink=0.4, pad=0.02, ax=ax, extend='both')
 clb.set_ticks([-2.4, -1.6, -0.8, 0, 0.8, 1.6, 2.4])
 clb.ax.tick_params(labelsize=15)
 clb.set_label('(K)', fontsize=15)
 ax.set_extent([longitude_west, longitude_east, latitude_south, latitude_north], crs=ccrs.PlateCarree())
-ax.set_title("Estimated BTD (Cloud-Free)", fontsize=20, pad=10)
+ax.set_title("Simulated "+ str(round(first_wl*1e6, 1)) + " μm - " + str(round(second_wl*1e6, 1)) +" μm BTD from observations \n("+date_str+")", fontsize=20, pad=10)
 ax.coastlines(resolution='50m', color='black', linewidth=1)
 ax.add_feature(feature.LAND, edgecolor='#000', facecolor='#000', zorder=10)
 gl = ax.gridlines(draw_labels=True, linewidth=1, color='gray', linestyle='--', zorder=0)
@@ -185,4 +214,4 @@ gl.top_labels = False
 gl.right_labels = False
 ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, pos: f'{x:.1f}°E' if x >= 0 else f'{-x:.1f}°W'))
 ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, pos: f'{y:.1f}°N' if y >= 0 else f'{-y:.1f}°S'))
-fig.savefig("flc_estimation_figure/"+date_str, dpi=200, bbox_inches='tight')
+fig.savefig("flci_observations_figure/"+date_str+"_ext", dpi=200, bbox_inches='tight')
