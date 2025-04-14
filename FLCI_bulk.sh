@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 #--- Make sure you're using flc_env on smiller2
-for date in 20240620
+for date in 20240301
 do 
     #--- Collect model data: 
     #------ must be 00z, 06z, 12z, 18z

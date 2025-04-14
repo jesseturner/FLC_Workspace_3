@@ -25,6 +25,22 @@ longitude_east = -55
 region = gfs_ds.sel(latitude=slice(latitude_north, latitude_south), longitude=slice(360+longitude_west, 360+longitude_east))
 region_name = "gulf_stream"
 
+# #--- California coast
+# latitude_north = 41.1
+# latitude_south = 33
+# longitude_west = -125.7
+# longitude_east = -116.9
+# region = gfs_ds.sel(latitude=slice(latitude_north, latitude_south), longitude=slice(360+longitude_west, 360+longitude_east))
+# region_name = "california_coast"
+
+#--- Falkland current
+# latitude_north = -39.6
+# latitude_south = -53.8
+# longitude_west = -67
+# longitude_east = -50.6
+# region = gfs_ds.sel(latitude=slice(latitude_north, latitude_south), longitude=slice(360+longitude_west, 360+longitude_east))
+# region_name = "falkland_current"
+
 #------ Global
 # latitude_north = 90
 # latitude_south = -90
